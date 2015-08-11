@@ -49,9 +49,14 @@ func main() {
 			message = ""
 		}
 	}
+
 	if err := scanner.Err(); err != nil {
 		fmt.Fprintln(os.Stderr, "reading standard input:", err)
 		os.Exit(2)
+	}
+
+	if message != "" {
+		slackClient.postMessage(fmt.Sprintf(messageFormat, message))
 	}
 }
 
