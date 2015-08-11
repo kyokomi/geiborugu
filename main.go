@@ -19,15 +19,16 @@ type Slack struct {
 
 func main() {
 	slackToken := flag.String("token", "", "slack token")
+	slackChannel := flag.String("channel", "", "slack post message channelID or channelName")
+	dryRun := flag.Bool("dry-run", false, "dry-run")
+	flag.Parse()
+
 	if *slackToken == "" {
 		*slackToken = os.Getenv("SLACK_TOKEN")
 	}
-	slackChannel := flag.String("channel", "", "slack post message channelID or channelName")
 	if *slackChannel == "" {
 		*slackChannel = os.Getenv("SLACK_CHANNEL")
 	}
-	dryRun := flag.Bool("dry-run", false, "dry-run")
-	flag.Parse()
 
 	slackClient := Slack{
 		Slack:       slack.New(*slackToken),
