@@ -9,17 +9,13 @@ import (
 	"github.com/nlopes/slack"
 )
 
-var messageFormat = "```\n%s\n```"
-
-type Slack struct {
-	*slack.Slack
-	channelName string
-	dryRun      bool
-}
+var messageFormat = "```\n%s```"
 
 func main() {
 	slackToken := flag.String("token", "", "slack token")
 	slackChannel := flag.String("channel", "", "slack post message channelID or channelName")
+	userName := flag.String("name", "", "slack bot name")
+	iconURL := flag.String("icon", "", "slack bot icon url")
 	dryRun := flag.Bool("dry-run", false, "dry-run")
 	flag.Parse()
 
@@ -33,6 +29,8 @@ func main() {
 	slackClient := Slack{
 		Slack:       slack.New(*slackToken),
 		channelName: *slackChannel,
+		userName:    *userName,
+		iconURL:     *iconURL,
 		dryRun:      *dryRun,
 	}
 
@@ -60,11 +58,30 @@ func main() {
 	}
 }
 
+type Slack struct {
+	*slack.Slack
+	channelName string
+	userName    string
+	iconURL     string
+	dryRun      bool
+}
+
+func (s Slack) newPostMessageParams() slack.PostMessageParameters {
+	params := slack.NewPostMessageParameters()
+	if s.userName != "" {
+		params.Username = s.userName
+	}
+	if s.iconURL != "" {
+		params.IconURL = s.iconURL
+	}
+	return params
+}
+
 func (s Slack) postMessage(message string) error {
 	if s.dryRun {
 		fmt.Println(message)
 		return nil
 	}
-	_, _, err := s.Slack.PostMessage(s.channelName, message, slack.NewPostMessageParameters())
+	_, _, err := s.Slack.PostMessage(s.channelName, message, s.newPostMessageParams())
 	return err
 }
