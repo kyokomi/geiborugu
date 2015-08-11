@@ -42,6 +42,8 @@ func main() {
 		message += scanner.Text()
 		message += "\n"
 
+		fmt.Println(message)
+
 		if len(message) >= 5000 {
 			slackClient.postMessage(fmt.Sprintf(messageFormat, message))
 			message = ""

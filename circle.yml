@@ -1,0 +1,6 @@
+test:
+  pre:
+    - go get github.com/kyokomi/go-cyclomatic-complexity
+    - go get github.com/kyokomi/geiborugu
+  post:
+    - go-cyclomatic-complexity . | geiborugu --channel "#random"
