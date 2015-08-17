@@ -59,7 +59,7 @@ func main() {
 }
 
 type Slack struct {
-	*slack.Slack
+	Slack *slack.Client
 	channelName string
 	userName    string
 	iconURL     string
